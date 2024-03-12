@@ -2,17 +2,15 @@ import 'package:flutter_svg_provider/flutter_svg_provider.dart' as fs;
 import 'package:flutter/material.dart';
 import 'package:aman_s_application9/core/app_export.dart';
 
-class CustomBottomBar extends StatefulWidget {
-  CustomBottomBar({this.onChanged});
+class CustomBottomBar extends StatelessWidget {
+  CustomBottomBar({
+    Key? key,
+    this.onChanged,
+  }) : super(
+          key: key,
+        );
 
-  Function(BottomBarEnum)? onChanged;
-
-  @override
-  CustomBottomBarState createState() => CustomBottomBarState();
-}
-
-class CustomBottomBarState extends State<CustomBottomBar> {
-  int selectedIndex = 0;
+  RxInt selectedIndex = 0.obs;
 
   List<BottomMenuModel> bottomMenuList = [
     BottomMenuModel(
@@ -32,6 +30,8 @@ class CustomBottomBarState extends State<CustomBottomBar> {
     )
   ];
 
+  Function(BottomBarEnum)? onChanged;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -44,36 +44,37 @@ class CustomBottomBarState extends State<CustomBottomBar> {
           fit: BoxFit.cover,
         ),
       ),
-      child: BottomNavigationBar(
-        backgroundColor: Colors.transparent,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        selectedFontSize: 0,
-        elevation: 0,
-        currentIndex: selectedIndex,
-        type: BottomNavigationBarType.fixed,
-        items: List.generate(bottomMenuList.length, (index) {
-          return BottomNavigationBarItem(
-            icon: CustomImageView(
-              imagePath: bottomMenuList[index].icon,
-              height: 36.v,
-              width: 25.h,
-              color: appTheme.blueGray100,
-            ),
-            activeIcon: CustomImageView(
-              imagePath: bottomMenuList[index].activeIcon,
-              height: 24.adaptSize,
-              width: 24.adaptSize,
-              color: appTheme.gray500,
-            ),
-            label: '',
-          );
-        }),
-        onTap: (index) {
-          selectedIndex = index;
-          widget.onChanged?.call(bottomMenuList[index].type);
-          setState(() {});
-        },
+      child: Obx(
+        () => BottomNavigationBar(
+          backgroundColor: Colors.transparent,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          selectedFontSize: 0,
+          elevation: 0,
+          currentIndex: selectedIndex.value,
+          type: BottomNavigationBarType.fixed,
+          items: List.generate(bottomMenuList.length, (index) {
+            return BottomNavigationBarItem(
+              icon: CustomImageView(
+                imagePath: bottomMenuList[index].icon,
+                height: 36.v,
+                width: 25.h,
+                color: appTheme.blueGray100,
+              ),
+              activeIcon: CustomImageView(
+                imagePath: bottomMenuList[index].activeIcon,
+                height: 24.adaptSize,
+                width: 24.adaptSize,
+                color: appTheme.gray500,
+              ),
+              label: '',
+            );
+          }),
+          onTap: (index) {
+            selectedIndex.value = index;
+            onChanged?.call(bottomMenuList[index].type);
+          },
+        ),
       ),
     );
   }

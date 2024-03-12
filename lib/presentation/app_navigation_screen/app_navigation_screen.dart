@@ -1,120 +1,96 @@
-import 'models/app_navigation_model.dart';
 import 'package:flutter/material.dart';
 import 'package:aman_s_application9/core/app_export.dart';
-import 'bloc/app_navigation_bloc.dart';
+import 'controller/app_navigation_controller.dart';
 
-class AppNavigationScreen extends StatelessWidget {
+// ignore_for_file: must_be_immutable
+class AppNavigationScreen extends GetWidget<AppNavigationController> {
   const AppNavigationScreen({Key? key})
       : super(
           key: key,
         );
 
-  static Widget builder(BuildContext context) {
-    return BlocProvider<AppNavigationBloc>(
-      create: (context) => AppNavigationBloc(AppNavigationState(
-        appNavigationModelObj: AppNavigationModel(),
-      ))
-        ..add(AppNavigationInitialEvent()),
-      child: AppNavigationScreen(),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AppNavigationBloc, AppNavigationState>(
-      builder: (context, state) {
-        return SafeArea(
-          child: Scaffold(
-            backgroundColor: Color(0XFFFFFFFF),
-            body: SizedBox(
-              width: double.maxFinite,
-              child: Column(
-                children: [
-                  _buildAppNavigation(context),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Color(0XFFFFFFFF),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Color(0XFFFFFFFF),
+        body: SizedBox(
+          width: double.maxFinite,
+          child: Column(
+            children: [
+              _buildAppNavigation(),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Color(0XFFFFFFFF),
+                    ),
+                    child: Column(
+                      children: [
+                        _buildScreenTitle(
+                          screenTitle: "Welcome Screen - One".tr,
+                          onTapScreenTitle: () => onTapScreenTitle(
+                              AppRoutes.welcomeScreenOneScreen),
                         ),
-                        child: Column(
-                          children: [
-                            _buildScreenTitle(
-                              context,
-                              screenTitle: "Welcome Screen - One".tr,
-                              onTapScreenTitle: () => onTapScreenTitle(
-                                  AppRoutes.welcomeScreenOneScreen),
-                            ),
-                            _buildScreenTitle(
-                              context,
-                              screenTitle: "Welcome Screen -2 ".tr,
-                              onTapScreenTitle: () => onTapScreenTitle(
-                                  AppRoutes.welcomeScreen2Screen),
-                            ),
-                            _buildScreenTitle(
-                              context,
-                              screenTitle: "Splash Page".tr,
-                              onTapScreenTitle: () =>
-                                  onTapScreenTitle(AppRoutes.splashPageScreen),
-                            ),
-                            _buildScreenTitle(
-                              context,
-                              screenTitle: "Register Page - info".tr,
-                              onTapScreenTitle: () => onTapScreenTitle(
-                                  AppRoutes.registerPageInfoScreen),
-                            ),
-                            _buildScreenTitle(
-                              context,
-                              screenTitle: "Register Page - Activity".tr,
-                              onTapScreenTitle: () => onTapScreenTitle(
-                                  AppRoutes.registerPageActivityScreen),
-                            ),
-                            _buildScreenTitle(
-                              context,
-                              screenTitle: "Success Registration".tr,
-                              onTapScreenTitle: () => onTapScreenTitle(
-                                  AppRoutes.successRegistrationScreen),
-                            ),
-                            _buildScreenTitle(
-                              context,
-                              screenTitle: "Register Page - Sleep Goal".tr,
-                              onTapScreenTitle: () => onTapScreenTitle(
-                                  AppRoutes.registerPageSleepGoalScreen),
-                            ),
-                            _buildScreenTitle(
-                              context,
-                              screenTitle: "Home Screen".tr,
-                              onTapScreenTitle: () =>
-                                  onTapScreenTitle(AppRoutes.homeScreen),
-                            ),
-                            _buildScreenTitle(
-                              context,
-                              screenTitle: "Add Sleep".tr,
-                              onTapScreenTitle: () =>
-                                  onTapScreenTitle(AppRoutes.addSleepScreen),
-                            ),
-                            _buildScreenTitle(
-                              context,
-                              screenTitle: "Add Hydration".tr,
-                              onTapScreenTitle: () => onTapScreenTitle(
-                                  AppRoutes.addHydrationScreen),
-                            ),
-                          ],
+                        _buildScreenTitle(
+                          screenTitle: "Welcome Screen -2 ".tr,
+                          onTapScreenTitle: () =>
+                              onTapScreenTitle(AppRoutes.welcomeScreen2Screen),
                         ),
-                      ),
+                        _buildScreenTitle(
+                          screenTitle: "Splash Page".tr,
+                          onTapScreenTitle: () =>
+                              onTapScreenTitle(AppRoutes.splashPageScreen),
+                        ),
+                        _buildScreenTitle(
+                          screenTitle: "Register Page - info".tr,
+                          onTapScreenTitle: () => onTapScreenTitle(
+                              AppRoutes.registerPageInfoScreen),
+                        ),
+                        _buildScreenTitle(
+                          screenTitle: "Register Page - Activity".tr,
+                          onTapScreenTitle: () => onTapScreenTitle(
+                              AppRoutes.registerPageActivityScreen),
+                        ),
+                        _buildScreenTitle(
+                          screenTitle: "Success Registration".tr,
+                          onTapScreenTitle: () => onTapScreenTitle(
+                              AppRoutes.successRegistrationScreen),
+                        ),
+                        _buildScreenTitle(
+                          screenTitle: "Register Page - Sleep Goal".tr,
+                          onTapScreenTitle: () => onTapScreenTitle(
+                              AppRoutes.registerPageSleepGoalScreen),
+                        ),
+                        _buildScreenTitle(
+                          screenTitle: "Home Screen".tr,
+                          onTapScreenTitle: () =>
+                              onTapScreenTitle(AppRoutes.homeScreen),
+                        ),
+                        _buildScreenTitle(
+                          screenTitle: "Add Sleep".tr,
+                          onTapScreenTitle: () =>
+                              onTapScreenTitle(AppRoutes.addSleepScreen),
+                        ),
+                        _buildScreenTitle(
+                          screenTitle: "Add Hydration".tr,
+                          onTapScreenTitle: () =>
+                              onTapScreenTitle(AppRoutes.addHydrationScreen),
+                        ),
+                      ],
                     ),
                   ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
   /// Section Widget
-  Widget _buildAppNavigation(BuildContext context) {
+  Widget _buildAppNavigation() {
     return Container(
       decoration: BoxDecoration(
         color: Color(0XFFFFFFFF),
@@ -168,8 +144,7 @@ class AppNavigationScreen extends StatelessWidget {
   }
 
   /// Common widget
-  Widget _buildScreenTitle(
-    BuildContext context, {
+  Widget _buildScreenTitle({
     required String screenTitle,
     Function? onTapScreenTitle,
   }) {
@@ -215,6 +190,6 @@ class AppNavigationScreen extends StatelessWidget {
 
   /// Common click event
   void onTapScreenTitle(String routeName) {
-    NavigatorService.pushNamed(routeName);
+    Get.toNamed(routeName);
   }
 }

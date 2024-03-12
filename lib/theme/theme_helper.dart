@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:aman_s_application9/core/utils/pref_utils.dart';
 import 'package:aman_s_application9/core/utils/size_utils.dart';
+import 'package:get/get.dart';
 
 /// Helper class for managing themes and colors.
 class ThemeHelper {
@@ -17,6 +18,12 @@ class ThemeHelper {
   Map<String, ColorScheme> _supportedColorScheme = {
     'primary': ColorSchemes.primaryColorScheme
   };
+
+  /// Changes the app theme to [_newTheme].
+  void changeTheme(String _newTheme) {
+    PrefUtils().setThemeData(_newTheme);
+    Get.forceAppUpdate();
+  }
 
   /// Returns the primary colors for the current theme.
   PrimaryColors _getThemeColors() {

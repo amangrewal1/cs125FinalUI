@@ -1,20 +1,12 @@
 import 'package:aman_s_application9/widgets/custom_drop_down.dart';
-import 'models/register_page_activity_model.dart';
 import 'package:aman_s_application9/widgets/custom_elevated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:aman_s_application9/core/app_export.dart';
-import 'bloc/register_page_activity_bloc.dart';
+import 'controller/register_page_activity_controller.dart';
 
-class RegisterPageActivityScreen extends StatelessWidget {
+class RegisterPageActivityScreen
+    extends GetWidget<RegisterPageActivityController> {
   const RegisterPageActivityScreen({Key? key}) : super(key: key);
-
-  static Widget builder(BuildContext context) {
-    return BlocProvider<RegisterPageActivityBloc>(
-        create: (context) => RegisterPageActivityBloc(RegisterPageActivityState(
-            registerPageActivityModelObj: RegisterPageActivityModel()))
-          ..add(RegisterPageActivityInitialEvent()),
-        child: RegisterPageActivityScreen());
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,52 +31,41 @@ class RegisterPageActivityScreen extends StatelessWidget {
                           style: theme.textTheme.bodySmall!
                               .copyWith(height: 1.50))),
                   SizedBox(height: 28.v),
-                  BlocSelector<
-                          RegisterPageActivityBloc,
-                          RegisterPageActivityState,
-                          RegisterPageActivityModel?>(
-                      selector: (state) => state.registerPageActivityModelObj,
-                      builder: (context, registerPageActivityModelObj) {
-                        return CustomDropDown(
-                            icon: Container(
-                                margin:
-                                    EdgeInsets.fromLTRB(30.h, 15.v, 15.h, 15.v),
-                                child: CustomImageView(
-                                    imagePath: ImageConstant.imgArrowdown,
-                                    height: 18.adaptSize,
-                                    width: 18.adaptSize)),
-                            hintText: "lbl_activity_goal".tr,
-                            items: registerPageActivityModelObj
-                                    ?.dropdownItemList ??
-                                [],
-                            contentPadding: EdgeInsets.only(
-                                left: 30.h, top: 15.v, bottom: 15.v),
-                            onChanged: (value) {
-                              context
-                                  .read<RegisterPageActivityBloc>()
-                                  .add(ChangeDropDownEvent(value: value));
-                            });
+                  CustomDropDown(
+                      icon: Container(
+                          margin: EdgeInsets.fromLTRB(30.h, 15.v, 15.h, 15.v),
+                          child: CustomImageView(
+                              imagePath: ImageConstant.imgArrowdown,
+                              height: 18.adaptSize,
+                              width: 18.adaptSize)),
+                      hintText: "lbl_activity_goal".tr,
+                      items: controller.registerPageActivityModelObj.value
+                          .dropdownItemList!.value,
+                      contentPadding:
+                          EdgeInsets.only(left: 30.h, top: 15.v, bottom: 15.v),
+                      onChanged: (value) {
+                        controller.onSelected(value);
                       }),
                   SizedBox(height: 5.v)
                 ])),
-            bottomNavigationBar: _buildConfirm(context)));
+            bottomNavigationBar: _buildConfirm()));
   }
 
   /// Section Widget
-  Widget _buildConfirm(BuildContext context) {
+  Widget _buildConfirm() {
     return CustomElevatedButton(
         text: "lbl_confirm".tr,
         margin: EdgeInsets.only(left: 30.h, right: 30.h, bottom: 40.v),
         buttonStyle: CustomButtonStyles.none,
         decoration: CustomButtonStyles.gradientPrimaryToBlueDecoration,
         onPressed: () {
-          navigateToSleep(context);
+          navigateToSleep();
         });
   }
 
   /// Navigates to the registerPageSleepGoalScreen when the action is triggered.
-  navigateToSleep(BuildContext context) {
-    NavigatorService.pushNamed(
+  navigateToSleep() {
+    Get.toNamed(
       AppRoutes.registerPageSleepGoalScreen,
     );
   }

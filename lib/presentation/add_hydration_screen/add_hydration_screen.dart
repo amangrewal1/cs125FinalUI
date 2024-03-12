@@ -3,50 +3,38 @@ import 'package:aman_s_application9/widgets/app_bar/appbar_leading_iconbutton_on
 import 'package:aman_s_application9/widgets/app_bar/appbar_title.dart';
 import 'package:aman_s_application9/widgets/app_bar/appbar_trailing_iconbutton_one.dart';
 import 'package:aman_s_application9/widgets/custom_elevated_button.dart';
-import 'models/add_hydration_model.dart';
 import 'package:flutter/material.dart';
 import 'package:aman_s_application9/core/app_export.dart';
-import 'bloc/add_hydration_bloc.dart';
+import 'controller/add_hydration_controller.dart';
 
-class AddHydrationScreen extends StatelessWidget {
+class AddHydrationScreen extends GetWidget<AddHydrationController> {
   const AddHydrationScreen({Key? key}) : super(key: key);
-
-  static Widget builder(BuildContext context) {
-    return BlocProvider<AddHydrationBloc>(
-        create: (context) => AddHydrationBloc(
-            AddHydrationState(addHydrationModelObj: AddHydrationModel()))
-          ..add(AddHydrationInitialEvent()),
-        child: AddHydrationScreen());
-  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AddHydrationBloc, AddHydrationState>(
-        builder: (context, state) {
-      return SafeArea(
-          child: Scaffold(
-              appBar: _buildAppBar(context),
-              body: Container(
-                  width: double.maxFinite,
-                  padding: EdgeInsets.symmetric(vertical: 28.v),
-                  child: Column(children: [
-                    SizedBox(height: 18.v),
-                    _buildMonthCard(context),
-                    Spacer()
-                  ])),
-              bottomNavigationBar: _buildAdd(context)));
-    });
+    return SafeArea(
+        child: Scaffold(
+            appBar: _buildAppBar(),
+            body: Container(
+                width: double.maxFinite,
+                padding: EdgeInsets.symmetric(vertical: 28.v),
+                child: Column(children: [
+                  SizedBox(height: 18.v),
+                  _buildMonthCard(),
+                  Spacer()
+                ])),
+            bottomNavigationBar: _buildAdd()));
   }
 
   /// Section Widget
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
+  PreferredSizeWidget _buildAppBar() {
     return CustomAppBar(
         leadingWidth: 62.h,
         leading: AppbarLeadingIconbuttonOne(
             imagePath: ImageConstant.imgArrowLeft,
             margin: EdgeInsets.only(left: 30.h, top: 12.v, bottom: 12.v),
             onTap: () {
-              onTapArrowLeft(context);
+              onTapArrowLeft();
             }),
         title: AppbarTitle(
             text: "lbl_hydration".tr, margin: EdgeInsets.only(left: 74.h)),
@@ -58,7 +46,7 @@ class AddHydrationScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildMonthCard(BuildContext context) {
+  Widget _buildMonthCard() {
     return Container(
         margin: EdgeInsets.only(left: 37.h, right: 23.h),
         padding: EdgeInsets.symmetric(horizontal: 8.h, vertical: 14.v),
@@ -88,25 +76,25 @@ class AddHydrationScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildAdd(BuildContext context) {
+  Widget _buildAdd() {
     return CustomElevatedButton(
         text: "lbl_add".tr,
         margin: EdgeInsets.only(left: 31.h, right: 29.h, bottom: 40.v),
         buttonStyle: CustomButtonStyles.none,
         decoration: CustomButtonStyles.gradientPrimaryToBlueDecoration,
         onPressed: () {
-          naviToHome(context);
+          naviToHome();
         });
   }
 
   /// Navigates to the previous screen.
-  onTapArrowLeft(BuildContext context) {
-    NavigatorService.goBack();
+  onTapArrowLeft() {
+    Get.back();
   }
 
   /// Navigates to the homeScreen when the action is triggered.
-  naviToHome(BuildContext context) {
-    NavigatorService.pushNamedAndRemoveUntil(
+  naviToHome() {
+    Get.offAllNamed(
       AppRoutes.homeScreen,
     );
   }

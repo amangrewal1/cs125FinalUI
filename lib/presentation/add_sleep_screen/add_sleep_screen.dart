@@ -3,66 +3,54 @@ import 'package:aman_s_application9/widgets/app_bar/appbar_leading_iconbutton.da
 import 'package:aman_s_application9/widgets/app_bar/appbar_title.dart';
 import 'package:aman_s_application9/widgets/app_bar/appbar_trailing_iconbutton.dart';
 import 'package:aman_s_application9/widgets/custom_elevated_button.dart';
-import 'models/add_sleep_model.dart';
 import 'package:flutter/material.dart';
 import 'package:aman_s_application9/core/app_export.dart';
-import 'bloc/add_sleep_bloc.dart';
+import 'controller/add_sleep_controller.dart';
 
-class AddSleepScreen extends StatelessWidget {
+class AddSleepScreen extends GetWidget<AddSleepController> {
   const AddSleepScreen({Key? key}) : super(key: key);
-
-  static Widget builder(BuildContext context) {
-    return BlocProvider<AddSleepBloc>(
-        create: (context) =>
-            AddSleepBloc(AddSleepState(addSleepModelObj: AddSleepModel()))
-              ..add(AddSleepInitialEvent()),
-        child: AddSleepScreen());
-  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AddSleepBloc, AddSleepState>(builder: (context, state) {
-      return SafeArea(
-          child: Scaffold(
-              appBar: _buildAppBar(context),
-              body: Container(
-                  width: double.maxFinite,
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 28.h, vertical: 18.v),
-                  child: Column(children: [
-                    Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 2.h),
-                        child: _buildHoursOfSleepCard(context,
-                            clock: ImageConstant.imgIconBed,
-                            hoursOfSleep: "lbl_bedtime".tr,
-                            duration: "lbl_09_00_pm".tr,
-                            onTapHoursOfSleepCard: () {
-                          openTimePickerDialog(context);
-                        })),
-                    SizedBox(height: 14.v),
-                    Padding(
-                        padding: EdgeInsets.only(left: 2.h, right: 1.h),
-                        child: _buildHoursOfSleepCard(context,
-                            clock: ImageConstant.imgClock,
-                            hoursOfSleep: "lbl_hours_of_sleep".tr,
-                            duration: "msg_8hours_30minutes".tr)),
-                    SizedBox(height: 12.v),
-                    _buildText(context),
-                    SizedBox(height: 5.v)
-                  ])),
-              bottomNavigationBar: _buildAdd(context)));
-    });
+    return SafeArea(
+        child: Scaffold(
+            appBar: _buildAppBar(),
+            body: Container(
+                width: double.maxFinite,
+                padding: EdgeInsets.symmetric(horizontal: 28.h, vertical: 18.v),
+                child: Column(children: [
+                  Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 2.h),
+                      child: _buildHoursOfSleepCard(
+                          clock: ImageConstant.imgIconBed,
+                          hoursOfSleep: "lbl_bedtime".tr,
+                          duration: "lbl_09_00_pm".tr,
+                          onTapHoursOfSleepCard: () {
+                            openTimePickerDialog();
+                          })),
+                  SizedBox(height: 14.v),
+                  Padding(
+                      padding: EdgeInsets.only(left: 2.h, right: 1.h),
+                      child: _buildHoursOfSleepCard(
+                          clock: ImageConstant.imgClock,
+                          hoursOfSleep: "lbl_hours_of_sleep".tr,
+                          duration: "msg_8hours_30minutes".tr)),
+                  SizedBox(height: 12.v),
+                  _buildText(),
+                  SizedBox(height: 5.v)
+                ])),
+            bottomNavigationBar: _buildAdd()));
   }
 
   /// Section Widget
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
+  PreferredSizeWidget _buildAppBar() {
     return CustomAppBar(
         leadingWidth: 62.h,
         leading: AppbarLeadingIconbutton(
             imagePath: ImageConstant.imgArrowLeft,
             margin: EdgeInsets.only(left: 30.h, top: 12.v, bottom: 12.v),
             onTap: () {
-              onTapArrowLeft(context);
+              onTapArrowLeft();
             }),
         centerTitle: true,
         title: AppbarTitle(text: "lbl_add_sleep".tr),
@@ -74,7 +62,7 @@ class AddSleepScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildText(BuildContext context) {
+  Widget _buildText() {
     return Container(
         margin: EdgeInsets.only(right: 2.h),
         padding: EdgeInsets.symmetric(horizontal: 15.h, vertical: 13.v),
@@ -126,20 +114,19 @@ class AddSleepScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildAdd(BuildContext context) {
+  Widget _buildAdd() {
     return CustomElevatedButton(
         text: "lbl_add".tr,
         margin: EdgeInsets.only(left: 31.h, right: 29.h, bottom: 40.v),
         buttonStyle: CustomButtonStyles.none,
         decoration: CustomButtonStyles.gradientPrimaryToBlueDecoration,
         onPressed: () {
-          naviToHome(context);
+          naviToHome();
         });
   }
 
   /// Common widget
-  Widget _buildHoursOfSleepCard(
-    BuildContext context, {
+  Widget _buildHoursOfSleepCard({
     required String clock,
     required String hoursOfSleep,
     required String duration,
@@ -176,22 +163,25 @@ class AddSleepScreen extends StatelessWidget {
   }
 
   /// Navigates to the previous screen.
-  onTapArrowLeft(BuildContext context) {
-    NavigatorService.goBack();
+  onTapArrowLeft() {
+    Get.back();
   }
 
   /// Displays a time picker dialog to update the selected time
   ///
   /// This function returns a `Future` that completes with `void`.
-  Future<void> openTimePickerDialog(BuildContext context) async {
-    var initialState = BlocProvider.of<AddSleepBloc>(context).state;
-    TimeOfDay? time =
-        await showTimePicker(context: context, initialTime: TimeOfDay.now());
+  Future<void> openTimePickerDialog() async {
+    TimeOfDay? time = await showTimePicker(
+        context: Get.context!,
+        initialTime: controller.selectedopenTimePickerDialogTime);
+    if (time != null) {
+      controller.selectedopenTimePickerDialogTime = time;
+    }
   }
 
   /// Navigates to the homeScreen when the action is triggered.
-  naviToHome(BuildContext context) {
-    NavigatorService.pushNamedAndRemoveUntil(
+  naviToHome() {
+    Get.offAllNamed(
       AppRoutes.homeScreen,
     );
   }

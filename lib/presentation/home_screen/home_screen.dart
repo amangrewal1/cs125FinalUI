@@ -1,83 +1,67 @@
 import 'package:aman_s_application9/widgets/custom_bottom_bar.dart';
-import 'models/home_model.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as fs;
 import 'package:flutter/material.dart';
 import 'package:aman_s_application9/core/app_export.dart';
-import 'bloc/home_bloc.dart';
+import 'controller/home_controller.dart';
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({Key? key})
+// ignore_for_file: must_be_immutable
+class HomeScreen extends GetWidget<HomeController> {
+  const HomeScreen({Key? key})
       : super(
           key: key,
         );
 
-  GlobalKey<NavigatorState> navigatorKey = GlobalKey();
-
-  static Widget builder(BuildContext context) {
-    return BlocProvider<HomeBloc>(
-      create: (context) => HomeBloc(HomeState(
-        homeModelObj: HomeModel(),
-      ))
-        ..add(HomeInitialEvent()),
-      child: HomeScreen(),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeBloc, HomeState>(
-      builder: (context, state) {
-        return SafeArea(
-          child: Scaffold(
-            body: Container(
-              width: double.maxFinite,
-              padding: EdgeInsets.symmetric(
-                horizontal: 28.h,
-                vertical: 40.v,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 2.h),
-                    child: Text(
-                      "lbl_welcome_back".tr,
-                      style: CustomTextStyles.bodySmallGray500_1,
-                    ),
-                  ),
-                  SizedBox(height: 6.v),
-                  Padding(
-                    padding: EdgeInsets.only(left: 2.h),
-                    child: Text(
-                      "lbl_stefani_wong".tr,
-                      style: theme.textTheme.titleLarge,
-                    ),
-                  ),
-                  SizedBox(height: 29.v),
-                  _buildSeventyTwo(context),
-                  SizedBox(height: 50.v),
-                  Padding(
-                    padding: EdgeInsets.only(left: 2.h),
-                    child: Text(
-                      "lbl_recommendation".tr,
-                      style: CustomTextStyles.titleMediumGray90001,
-                    ),
-                  ),
-                  SizedBox(height: 8.v),
-                  _buildActivityStatusCard(context),
-                  SizedBox(height: 5.v),
-                ],
-              ),
-            ),
-            bottomNavigationBar: _buildBottomBar(context),
+    return SafeArea(
+      child: Scaffold(
+        body: Container(
+          width: double.maxFinite,
+          padding: EdgeInsets.symmetric(
+            horizontal: 28.h,
+            vertical: 40.v,
           ),
-        );
-      },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 2.h),
+                child: Text(
+                  "lbl_welcome_back".tr,
+                  style: CustomTextStyles.bodySmallGray500_1,
+                ),
+              ),
+              SizedBox(height: 6.v),
+              Padding(
+                padding: EdgeInsets.only(left: 2.h),
+                child: Text(
+                  "lbl_stefani_wong".tr,
+                  style: theme.textTheme.titleLarge,
+                ),
+              ),
+              SizedBox(height: 29.v),
+              _buildSeventyTwo(),
+              SizedBox(height: 50.v),
+              Padding(
+                padding: EdgeInsets.only(left: 2.h),
+                child: Text(
+                  "lbl_recommendation".tr,
+                  style: CustomTextStyles.titleMediumGray90001,
+                ),
+              ),
+              SizedBox(height: 8.v),
+              _buildActivityStatusCard(),
+              SizedBox(height: 5.v),
+            ],
+          ),
+        ),
+        bottomNavigationBar: _buildBottomBar(),
+      ),
     );
   }
 
   /// Section Widget
-  Widget _buildSeventyTwo(BuildContext context) {
+  Widget _buildSeventyTwo() {
     return Container(
       width: 315.h,
       margin: EdgeInsets.only(left: 2.h),
@@ -140,7 +124,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildActivityStatusCard(BuildContext context) {
+  Widget _buildActivityStatusCard() {
     return Padding(
       padding: EdgeInsets.only(left: 2.h),
       child: Row(
@@ -267,7 +251,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildBottomBar(BuildContext context) {
+  Widget _buildBottomBar() {
     return CustomBottomBar(
       onChanged: (BottomBarEnum type) {},
     );
